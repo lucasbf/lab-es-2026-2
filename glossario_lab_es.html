@@ -1,0 +1,830 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glossário, Papéis e Artefatos — Laboratório de Engenharia de Software</title>
+<style>
+
+/* ============================================================
+   TOKENS (mesmo sistema do Manual do Aluno / Modelos de Entrega)
+   ============================================================ */
+:root{
+  color-scheme: light;
+  --paper:          #FAF8F3;
+  --surface:        #FFFFFF;
+  --ink:            #1B2430;
+  --ink-soft:       #454F5E;
+  --ink-faint:      #6B7686;
+  --line:           #E3DED2;
+  --line-blue:      #CFDDE2;
+  --blueprint:      #1B6E85;
+  --blueprint-deep: #124F60;
+  --blueprint-wash: #E7F1F3;
+  --copper:         #B15A24;
+  --copper-deep:    #8A4419;
+  --copper-wash:    #F7ECDE;
+  --code-bg:        #F1EEE4;
+  --row-alt:        rgba(27,110,133,0.035);
+  --shadow:         rgba(27,36,48,0.10);
+
+  --font-display: ui-serif, Georgia, "Times New Roman", serif;
+  --font-body: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", "Segoe UI Mono", Consolas, "Roboto Mono", monospace;
+}
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --paper:          #14181D;
+    --surface:        #1B2027;
+    --ink:            #ECE8DE;
+    --ink-soft:       #ABB4C0;
+    --ink-faint:      #7E8998;
+    --line:           #2B323C;
+    --line-blue:      #33424C;
+    --blueprint:      #4FB3CE;
+    --blueprint-deep: #8FD3E6;
+    --blueprint-wash: rgba(79,179,206,0.14);
+    --copper:         #E2914F;
+    --copper-deep:    #F2B27C;
+    --copper-wash:    rgba(226,145,79,0.14);
+    --code-bg:        #232A32;
+    --row-alt:        rgba(79,179,206,0.06);
+    --shadow:         rgba(0,0,0,0.4);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --paper:          #14181D;
+  --surface:        #1B2027;
+  --ink:            #ECE8DE;
+  --ink-soft:       #ABB4C0;
+  --ink-faint:      #7E8998;
+  --line:           #2B323C;
+  --line-blue:      #33424C;
+  --blueprint:      #4FB3CE;
+  --blueprint-deep: #8FD3E6;
+  --blueprint-wash: rgba(79,179,206,0.14);
+  --copper:         #E2914F;
+  --copper-deep:    #F2B27C;
+  --copper-wash:    rgba(226,145,79,0.14);
+  --code-bg:        #232A32;
+  --row-alt:        rgba(79,179,206,0.06);
+  --shadow:         rgba(0,0,0,0.4);
+}
+
+/* ============================================================
+   RESET / BASE
+   ============================================================ */
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+img,svg{ max-width:100%; height:auto; display:block; }
+a{ color:var(--blueprint-deep); text-decoration-color: var(--line-blue); }
+a:focus-visible, .navlink:focus-visible{
+  outline:2px solid var(--blueprint);
+  outline-offset:2px;
+}
+h1,h2,h3,h4{
+  font-family:var(--font-display);
+  font-weight:600;
+  color:var(--ink);
+  text-wrap:balance;
+  margin:0;
+}
+p{ margin:0 0 0.9em 0; }
+p:last-child{ margin-bottom:0; }
+strong{ color:var(--ink); }
+code{
+  font-family:var(--font-mono);
+  font-size:0.9em;
+  background:var(--code-bg);
+  padding:1px 6px;
+  border-radius:4px;
+  color:var(--blueprint-deep);
+}
+
+.wrap{ max-width:900px; margin:0 auto; padding:0 22px; }
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+}
+
+/* ============================================================
+   TOP NAV
+   ============================================================ */
+.topbar{
+  position:sticky; top:0; z-index:50;
+  background:color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.topbar-inner{
+  max-width:900px; margin:0 auto; padding:0 22px;
+  display:flex; align-items:center; gap:14px;
+  height:52px;
+}
+.brand{
+  font-family:var(--font-mono);
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:0.5px;
+  color:var(--blueprint-deep);
+  white-space:nowrap;
+  flex:none;
+  text-decoration:none;
+}
+.navscroll{
+  display:flex; gap:4px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+}
+.navscroll::-webkit-scrollbar{ display:none; }
+.navlink{
+  flex:none;
+  font-family:var(--font-body);
+  font-size:12.5px;
+  font-weight:600;
+  color:var(--ink-soft);
+  text-decoration:none;
+  padding:6px 10px;
+  border-radius:6px;
+  white-space:nowrap;
+}
+.navlink:hover{ background:var(--blueprint-wash); color:var(--blueprint-deep); }
+.navlink--ext{ color:var(--copper-deep); }
+.navlink--ext:hover{ background:var(--copper-wash); color:var(--copper-deep); }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{ padding:44px 0 8px 0; }
+.eyebrow{
+  font-family:var(--font-mono);
+  font-size:12.5px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--blueprint-deep);
+  margin-bottom:10px;
+}
+.hero h1{
+  font-size:clamp(28px, 5vw, 40px);
+  line-height:1.14;
+  max-width:20ch;
+}
+.hero .sub{
+  margin-top:14px;
+  font-size:17px;
+  color:var(--ink-soft);
+  max-width:62ch;
+}
+.meta-row{
+  margin-top:20px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px 10px;
+}
+.meta-pill{
+  font-family:var(--font-mono);
+  font-size:11.5px;
+  color:var(--ink-faint);
+  border:1px solid var(--line-blue);
+  border-radius:20px;
+  padding:4px 11px;
+}
+
+.callout{
+  background:var(--blueprint-wash);
+  border-left:3px solid var(--blueprint);
+  border-radius: 0 8px 8px 0;
+  padding:14px 18px;
+  margin:22px 0;
+}
+.callout-label{
+  display:block;
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  color:var(--blueprint-deep);
+  margin-bottom:6px;
+}
+.callout p{ font-size:15px; }
+.callout--warn{ background:var(--copper-wash); border-left-color:var(--copper); }
+.callout--warn .callout-label{ color:var(--copper-deep); }
+
+/* TOC chips */
+.toc{
+  display:flex; flex-wrap:wrap; gap:8px;
+  margin:20px 0 0 0;
+}
+.toc a{
+  font-family:var(--font-mono);
+  font-size:12.5px;
+  font-weight:700;
+  color:var(--blueprint-deep);
+  background:var(--surface);
+  border:1px solid var(--line-blue);
+  border-radius:7px;
+  padding:6px 12px;
+  text-decoration:none;
+}
+.toc a:hover{ background:var(--blueprint-wash); }
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+section.block{
+  padding:46px 0;
+  border-top:1px solid var(--line);
+  scroll-margin-top:64px;
+}
+section.block:first-of-type{ border-top:none; }
+
+.sec-head{
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+  margin-bottom:10px;
+  flex-wrap:wrap;
+}
+.sec-tag{
+  font-family:var(--font-mono);
+  font-size:12px;
+  font-weight:700;
+  color:var(--blueprint);
+}
+.sec-head h2{ font-size:25px; }
+
+h3{
+  font-family:var(--font-display);
+  font-size:18px;
+  color:var(--blueprint-deep);
+  margin:30px 0 10px 0;
+}
+h3:first-child{ margin-top:0; }
+
+.lede{
+  font-size:17.5px;
+  line-height:1.6;
+  color:var(--ink);
+  margin-bottom:16px;
+}
+.sec-intro{
+  font-size:15px;
+  color:var(--ink-soft);
+  margin-bottom:18px;
+  max-width:70ch;
+}
+
+/* ============================================================
+   TERM CARDS (glossário)
+   ============================================================ */
+.term-grid{
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:12px; margin:16px 0 8px 0;
+}
+.term-card{
+  border:1px solid var(--line-blue);
+  border-radius:8px;
+  padding:13px 15px;
+  background:var(--surface);
+}
+.term-card .term-name{
+  font-weight:700; font-size:14.5px;
+  color:var(--blueprint-deep);
+  display:block; margin-bottom:4px;
+}
+.term-card .term-name .term-en{
+  font-family:var(--font-mono); font-weight:400; font-size:11px;
+  color:var(--ink-faint); margin-left:6px;
+}
+.term-card .term-def{ font-size:13.5px; color:var(--ink-soft); line-height:1.5; }
+
+/* ============================================================
+   ROLE CARDS (reaproveitado do Manual)
+   ============================================================ */
+.role-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:18px 0; }
+.role-card{
+  border:1px solid var(--line-blue);
+  border-radius:10px;
+  padding:18px 18px;
+  background:var(--surface);
+}
+.role-card .r-title{ font-weight:700; font-size:16px; color:var(--blueprint-deep); display:block; margin-bottom:6px; }
+.role-card .r-desc{ font-size:14px; color:var(--ink-soft); line-height:1.5; margin-bottom:10px; }
+.role-card .r-flag{ display:inline-block; margin-bottom:8px; font-family:var(--font-mono); font-size:11.5px; color:var(--copper-deep); background:var(--copper-wash); border-radius:4px; padding:2px 7px; }
+.role-card .r-do{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:4px; }
+.role-card .r-do li{ font-size:13px; color:var(--ink-soft); padding-left:14px; position:relative; }
+.role-card .r-do li::before{ content:"—"; position:absolute; left:0; color:var(--blueprint); }
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.tablewrap{ overflow-x:auto; margin:16px 0; border-radius:8px; border:1px solid var(--line-blue); }
+table.spec{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+  min-width:560px;
+}
+table.spec th{
+  background:var(--blueprint-wash);
+  color:var(--blueprint-deep);
+  text-align:left;
+  font-family:var(--font-body);
+  font-weight:700;
+  font-size:12.5px;
+  padding:10px 14px;
+  border-bottom:1px solid var(--line-blue);
+  position:sticky; top:0;
+}
+table.spec td{
+  padding:11px 14px;
+  border-bottom:1px solid var(--line);
+  vertical-align:top;
+}
+table.spec tr:last-child td{ border-bottom:none; }
+table.spec tbody tr:nth-child(odd) td{ background:var(--row-alt); }
+table.spec td.num{ font-variant-numeric:tabular-nums; font-family:var(--font-mono); }
+table.spec td.mono{ font-family:var(--font-mono); font-size:13px; white-space:nowrap; }
+table.spec a.rowlink{ font-weight:600; }
+
+.badge{
+  display:inline-block;
+  font-family:var(--font-mono);
+  font-size:12px;
+  font-weight:700;
+  color:var(--copper-deep);
+  background:var(--copper-wash);
+  border:1px solid var(--copper);
+  border-radius:5px;
+  padding:2px 7px;
+  white-space:nowrap;
+}
+.pill-track{
+  font-family:var(--font-mono);
+  font-size:11px;
+  color:var(--ink-faint);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:2px 8px;
+  white-space:nowrap;
+}
+
+/* ============================================================
+   REFERENCES
+   ============================================================ */
+.ref-group{ margin-bottom:26px; }
+.ref-group h3{ margin-top:0; margin-bottom:4px; }
+.ref-group .ref-group-hint{ font-size:13px; color:var(--ink-faint); margin-bottom:12px; }
+.ref-list{ display:flex; flex-direction:column; gap:0; }
+.ref-item{
+  display:flex; flex-direction:column; gap:2px;
+  padding:12px 0;
+  border-bottom:1px solid var(--line);
+}
+.ref-list .ref-item:last-child{ border-bottom:none; padding-bottom:0; }
+.ref-item .ref-title{ font-weight:700; font-size:14.5px; text-decoration:none; }
+.ref-item .ref-title:hover{ text-decoration:underline; }
+.ref-item .ref-desc{ font-size:13.5px; color:var(--ink-soft); }
+.ref-item .ref-url{
+  font-family:var(--font-mono); font-size:11px; color:var(--ink-faint);
+  word-break:break-all;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer{
+  padding:40px 0 60px 0;
+  border-top:1px solid var(--line);
+}
+footer p{
+  font-family:var(--font-mono);
+  font-size:11.5px;
+  color:var(--ink-faint);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:620px){
+  .term-grid, .role-grid{ grid-template-columns:1fr; }
+  .hero{ padding-top:30px; }
+}
+
+@media print{
+  .topbar{ display:none; }
+  html{ scroll-behavior:auto; }
+}
+
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html">LAB·ES</a>
+    <nav class="navscroll" aria-label="Navegação do glossário">
+      <a class="navlink" href="#comece">Início</a>
+      <a class="navlink" href="#processo">Processo</a>
+      <a class="navlink" href="#requisitos">Requisitos</a>
+      <a class="navlink" href="#modelagem">Modelagem</a>
+      <a class="navlink" href="#codigo">Código</a>
+      <a class="navlink" href="#qualidade">Qualidade</a>
+      <a class="navlink" href="#papeis">Papéis</a>
+      <a class="navlink" href="#artefatos">Artefatos</a>
+      <a class="navlink" href="#referencias">Referências</a>
+      <a class="navlink navlink--ext" href="manual_do_aluno_lab_es.html">Manual ↗</a>
+      <a class="navlink navlink--ext" href="modelos_de_entregas_lab_es.html">Modelos ↗</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow">Glossário · papéis · artefatos</div>
+    <h1>O dicionário da disciplina</h1>
+    <p class="sub">Este documento explica os termos que aparecem no Manual do Aluno e nos Modelos de Entrega, detalha o que cada papel da equipe faz de fato, resume os 19 artefatos que você vai produzir de E1 a E10, e indica onde estudar cada assunto além da sala de aula.</p>
+    <div class="meta-row">
+      <span class="meta-pill">ADS · Fatec Ribeirão Preto</span>
+      <span class="meta-pill">Companheiro do Manual do Aluno</span>
+      <span class="meta-pill">+50 termos · 4 papéis · 19 artefatos</span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       COMECE AQUI
+       ============================================================ -->
+  <section class="block" id="comece">
+    <div class="sec-head"><span class="sec-tag">§0</span><h2>Como usar este documento</h2></div>
+    <p class="lede">Você não precisa ler isto de ponta a ponta de uma vez. Use como consulta: quando o Manual do Aluno ou um Modelo de Entrega citar um termo que você não conhece, volte aqui.</p>
+
+    <div class="callout">
+      <span class="callout-label">Três documentos, três papéis</span>
+      <p><strong>Manual do Aluno</strong> diz o que fazer e quando (regras, cronograma, avaliação). <strong>Modelos de Entrega</strong> dá o molde pronto de cada documento, com exemplo preenchido. <strong>Este glossário</strong> explica o vocabulário por trás dos dois — os termos, os papéis e o significado de cada artefato — e aponta para onde ir se você quiser entender a fundo, não só decorar.</p>
+    </div>
+
+    <nav class="toc" aria-label="Atalhos por seção">
+      <a href="#processo">Processo e metodologia ágil</a>
+      <a href="#requisitos">Requisitos e elicitação</a>
+      <a href="#modelagem">Modelagem (UML, DER, banco de dados)</a>
+      <a href="#codigo">Arquitetura, código e versionamento</a>
+      <a href="#qualidade">Qualidade, testes e segurança</a>
+      <a href="#papeis">Papéis na equipe</a>
+      <a href="#artefatos">Os 19 artefatos (E1–E10)</a>
+      <a href="#referencias">Referências para estudar</a>
+    </nav>
+  </section>
+
+  <!-- ============================================================
+       PROCESSO
+       ============================================================ -->
+  <section class="block" id="processo">
+    <div class="sec-head"><span class="sec-tag">§1</span><h2>Processo e metodologia ágil</h2></div>
+    <p class="sec-intro">O ritmo das sprints, das weeklies e das reviews do Laboratório vem do Scrum. Você não precisa aplicar o Scrum "de manual" — a disciplina adapta os rituais ao contexto de sala de aula —, mas o vocabulário é o mesmo do mercado.</p>
+
+    <div class="term-grid">
+      <div class="term-card"><span class="term-name">Scrum</span><span class="term-def">Framework ágil de gestão de projetos, iterativo e incremental: o trabalho é dividido em ciclos curtos (sprints), com entrega de valor ao fim de cada um.</span></div>
+      <div class="term-card"><span class="term-name">Sprint</span><span class="term-def">Ciclo de tempo fixo — no Laboratório, 1 a 2 semanas — no qual a equipe entrega um incremento funcional do produto.</span></div>
+      <div class="term-card"><span class="term-name">Backlog</span><span class="term-def">Lista viva e priorizada de tudo que pode ser construído no produto, escrita como histórias de usuário — não como tarefas técnicas soltas.</span></div>
+      <div class="term-card"><span class="term-name">História de usuário <span class="term-en">user story</span></span><span class="term-def">Descrição curta de uma funcionalidade do ponto de vista de quem usa: "Como [perfil], quero [ação], para que [benefício]."</span></div>
+      <div class="term-card"><span class="term-name">INVEST</span><span class="term-def">Checklist de qualidade de uma história: Independente, Negociável, de Valor, Estimável, pequena o bastante (<em>Small</em>) e Testável.</span></div>
+      <div class="term-card"><span class="term-name">Critério de aceite</span><span class="term-def">Condição objetiva e verificável que define quando uma história está pronta. "Funciona bem" não é critério de aceite; "bloqueia candidatura duplicada" é.</span></div>
+      <div class="term-card"><span class="term-name">MoSCoW</span><span class="term-def">Técnica de priorização em quatro categorias: <strong>M</strong>ust (essencial), <strong>S</strong>hould (importante), <strong>C</strong>ould (desejável), <strong>W</strong>on't (fora do escopo agora).</span></div>
+      <div class="term-card"><span class="term-name">MVP <span class="term-en">minimum viable product</span></span><span class="term-def">Menor conjunto de funcionalidades que já entrega valor real e é testável de ponta a ponta — não é "versão incompleta", é "versão mínima que funciona".</span></div>
+      <div class="term-card"><span class="term-name">Board <span class="term-en">quadro Kanban</span></span><span class="term-def">Ferramenta visual que mostra o estado das tarefas (a fazer / em andamento / feito). No Trello, GitHub Projects ou Jira.</span></div>
+      <div class="term-card"><span class="term-name">Sprint Review</span><span class="term-def">Cerimônia ao fim da sprint em que a equipe demonstra o incremento funcional rodando — não é apresentação de slides.</span></div>
+      <div class="term-card"><span class="term-name">Retrospectiva</span><span class="term-def">Reunião da equipe, logo após a Review, para refletir sobre o que funcionou e o que não funcionou no processo, gerando ações concretas para a próxima sprint.</span></div>
+      <div class="term-card"><span class="term-name">Weekly / Daily</span><span class="term-def">Reunião curta e frequente de acompanhamento: o que fiz, o que farei, e quais impedimentos tenho.</span></div>
+      <div class="term-card"><span class="term-name">Impedimento</span><span class="term-def">Qualquer obstáculo que bloqueia o progresso da equipe (acesso negado, dependência de outro integrante, dúvida técnica não resolvida), registrado pelo Facilitador.</span></div>
+      <div class="term-card"><span class="term-name">Definição de Pronto <span class="term-en">definition of done</span></span><span class="term-def">Conjunto de critérios que todo incremento deve satisfazer para ser considerado concluído (ex.: testado, revisado, sem erro em produção).</span></div>
+      <div class="term-card"><span class="term-name">Incremento</span><span class="term-def">Pedaço de software funcional e testável, entregue ao fim de uma sprint — soma-se aos incrementos anteriores.</span></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       REQUISITOS
+       ============================================================ -->
+  <section class="block" id="requisitos">
+    <div class="sec-head"><span class="sec-tag">§2</span><h2>Requisitos e elicitação</h2></div>
+    <p class="sec-intro">Vocabulário da Fase 1 (Concepção) — o que significa "descobrir" o que o sistema precisa fazer, e como isso vira algo rastreável até o código.</p>
+
+    <div class="term-grid">
+      <div class="term-card"><span class="term-name">Elicitação de requisitos</span><span class="term-def">Processo de descobrir, entender e documentar o que o sistema deve fazer, a partir de conversa com quem usa ou encomenda o sistema (entrevista, observação, análise de documentos).</span></div>
+      <div class="term-card"><span class="term-name">Requisito funcional</span><span class="term-def">O que o sistema deve fazer — ex.: "permitir cadastro de aluno", "gerar relatório de estágios por curso".</span></div>
+      <div class="term-card"><span class="term-name">Requisito não funcional</span><span class="term-def">Como o sistema deve se comportar — desempenho, segurança, usabilidade, disponibilidade, conformidade com a LGPD.</span></div>
+      <div class="term-card"><span class="term-name">Rastreabilidade</span><span class="term-def">Capacidade de conectar um requisito ao modelo, ao código e ao teste correspondentes, ponta a ponta. É o critério mais valorizado na rubrica do produto.</span></div>
+      <div class="term-card"><span class="term-name">Stakeholder</span><span class="term-def">Qualquer pessoa ou grupo com interesse no resultado do projeto — cliente, usuário final, orientador de TCC, professor.</span></div>
+      <div class="term-card"><span class="term-name">Escopo</span><span class="term-def">O que o projeto vai — e explicitamente não vai — entregar no semestre. Delimitado formalmente antes do desenvolvimento começar, no Termo de Aceite do Projeto.</span></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       MODELAGEM
+       ============================================================ -->
+  <section class="block" id="modelagem">
+    <div class="sec-head"><span class="sec-tag">§3</span><h2>Modelagem (UML, DER, banco de dados)</h2></div>
+    <p class="sec-intro">Duas modelagens diferentes, com propósitos diferentes: o diagrama de classes descreve o <em>domínio</em> do problema; o DER descreve o <em>banco de dados</em> que vai sustentá-lo. Não são a mesma coisa, mesmo que pareçam parecidos.</p>
+
+    <div class="term-grid">
+      <div class="term-card"><span class="term-name">UML <span class="term-en">unified modeling language</span></span><span class="term-def">Linguagem visual padronizada para modelar sistemas orientados a objetos, com diagramas para diferentes vistas (casos de uso, classes, sequência etc.).</span></div>
+      <div class="term-card"><span class="term-name">Diagrama de casos de uso</span><span class="term-def">Representa as interações entre atores (perfis de usuário) e as funcionalidades do sistema — a visão "o que cada perfil pode fazer".</span></div>
+      <div class="term-card"><span class="term-name">Diagrama de classes</span><span class="term-def">Modela as entidades do domínio, seus atributos, métodos e relacionamentos. É nível conceitual — não confundir com tabela de banco de dados.</span></div>
+      <div class="term-card"><span class="term-name">Modelo de domínio</span><span class="term-def">Representação das principais entidades e relações da área de conhecimento do sistema, independente de como será implementado.</span></div>
+      <div class="term-card"><span class="term-name">DER <span class="term-en">diagrama entidade-relacionamento</span></span><span class="term-def">Modela as tabelas do banco de dados, suas chaves e relacionamentos — nível lógico/físico, o que de fato vira SQL.</span></div>
+      <div class="term-card"><span class="term-name">Cardinalidade</span><span class="term-def">Quantidade de ocorrências que uma entidade pode ter em relação a outra: 1:1, 1:N ou N:N.</span></div>
+      <div class="term-card"><span class="term-name">Chave primária <span class="term-en">PK</span></span><span class="term-def">Campo (ou conjunto de campos) que identifica unicamente um registro numa tabela.</span></div>
+      <div class="term-card"><span class="term-name">Chave estrangeira <span class="term-en">FK</span></span><span class="term-def">Campo que referencia a chave primária de outra tabela, garantindo integridade referencial entre elas.</span></div>
+      <div class="term-card"><span class="term-name">Normalização / 3FN</span><span class="term-def">Processo de organizar os dados para eliminar redundância e inconsistência. A 3ª Forma Normal (3FN) é o nível mínimo exigido na disciplina.</span></div>
+      <div class="term-card"><span class="term-name">Tabela associativa</span><span class="term-def">Tabela extra criada para representar um relacionamento N:N — ex.: <code>Candidatura</code> entre <code>Aluno</code> e <code>Vaga</code>.</span></div>
+      <div class="term-card"><span class="term-name">DDL <span class="term-en">data definition language</span></span><span class="term-def">Comandos SQL (<code>CREATE</code>, <code>ALTER</code>, <code>CONSTRAINT</code>) que definem a estrutura do banco de dados.</span></div>
+      <div class="term-card"><span class="term-name">Dicionário de dados</span><span class="term-def">Documento que descreve cada campo de cada tabela: tipo, restrições (NOT NULL, UNIQUE) e descrição de propósito.</span></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CÓDIGO
+       ============================================================ -->
+  <section class="block" id="codigo">
+    <div class="sec-head"><span class="sec-tag">§4</span><h2>Arquitetura, código e versionamento</h2></div>
+    <p class="sec-intro">Termos do dia a dia de desenvolvimento em equipe — o que sustenta a regra "nenhum PR entra na branch principal sem revisão de outro integrante".</p>
+
+    <div class="term-grid">
+      <div class="term-card"><span class="term-name">Arquitetura em camadas</span><span class="term-def">Organização do sistema em camadas (apresentação, negócio, dados) para separar responsabilidades e reduzir acoplamento.</span></div>
+      <div class="term-card"><span class="term-name">Stack</span><span class="term-def">Conjunto de tecnologias usadas no projeto: linguagem, framework, banco de dados, plataforma de hospedagem.</span></div>
+      <div class="term-card"><span class="term-name">API / Endpoint</span><span class="term-def">API é a interface pela qual sistemas se comunicam; endpoint é um ponto de acesso específico dessa interface (ex.: <code>POST /candidaturas</code>).</span></div>
+      <div class="term-card"><span class="term-name">ORM <span class="term-en">object-relational mapping</span></span><span class="term-def">Biblioteca que traduz objetos do código para registros do banco de dados, poupando SQL manual no dia a dia.</span></div>
+      <div class="term-card"><span class="term-name">Migration</span><span class="term-def">Script versionado que aplica mudanças incrementais na estrutura do banco de dados, sem perder os dados existentes.</span></div>
+      <div class="term-card"><span class="term-name">Seed</span><span class="term-def">Conjunto de dados fictícios inserido no banco para permitir testes e demonstrações realistas.</span></div>
+      <div class="term-card"><span class="term-name">Repositório</span><span class="term-def">Espaço versionado (ex.: no GitHub) onde o código-fonte do projeto é armazenado e seu histórico é rastreado.</span></div>
+      <div class="term-card"><span class="term-name">Commit</span><span class="term-def">Registro de uma alteração no código, com uma mensagem explicando o que mudou e por quê.</span></div>
+      <div class="term-card"><span class="term-name">Branch</span><span class="term-def">Linha paralela de desenvolvimento, usada para isolar uma funcionalidade até que esteja pronta para integrar.</span></div>
+      <div class="term-card"><span class="term-name">Pull Request <span class="term-en">PR</span></span><span class="term-def">Solicitação formal para integrar o código de uma branch a outra, sujeita a revisão antes de ser aceita.</span></div>
+      <div class="term-card"><span class="term-name">Code Review</span><span class="term-def">Revisão do código por outro integrante da equipe antes de aceitar um PR — obrigatória em toda entrega do Laboratório.</span></div>
+      <div class="term-card"><span class="term-name">Merge</span><span class="term-def">Ato de unir o histórico de uma branch a outra, incorporando as mudanças definitivamente.</span></div>
+      <div class="term-card"><span class="term-name">CI/CD</span><span class="term-def">Integração e Entrega Contínuas: automação que roda testes e/ou publica o sistema a cada mudança no código.</span></div>
+      <div class="term-card"><span class="term-name">Deploy</span><span class="term-def">Publicação do sistema em um ambiente acessível publicamente por URL — "roda na minha máquina" não conta como deploy.</span></div>
+      <div class="term-card"><span class="term-name">Variável de ambiente / segredo</span><span class="term-def">Configuração sensível (senha, chave de API) mantida fora do código-fonte versionado, por segurança.</span></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       QUALIDADE
+       ============================================================ -->
+  <section class="block" id="qualidade">
+    <div class="sec-head"><span class="sec-tag">§5</span><h2>Qualidade, testes e segurança</h2></div>
+    <p class="sec-intro">O que separa "eu testei manualmente uma vez" de um plano de testes de verdade — e os dois assuntos de segurança que a Fase 4 do Laboratório cobra.</p>
+
+    <div class="term-grid">
+      <div class="term-card"><span class="term-name">Plano de testes</span><span class="term-def">Documento que descreve a estratégia de testes: o que será testado, como, e com que critério de aceite — escrito antes de haver funcionalidades prontas.</span></div>
+      <div class="term-card"><span class="term-name">Caso de teste</span><span class="term-def">Cenário específico de teste, com entrada, ação executada e resultado esperado.</span></div>
+      <div class="term-card"><span class="term-name">Teste unitário</span><span class="term-def">Testa uma unidade isolada de código — uma função, um método — sem depender de banco de dados ou rede.</span></div>
+      <div class="term-card"><span class="term-name">Teste de integração</span><span class="term-def">Testa a interação entre partes do sistema, como uma rota de API e o banco de dados real.</span></div>
+      <div class="term-card"><span class="term-name">Teste de aceitação</span><span class="term-def">Verifica se o sistema atende aos critérios de aceite combinados com o cliente ou Product Owner.</span></div>
+      <div class="term-card"><span class="term-name">Cobertura de testes</span><span class="term-def">Proporção do código-fonte exercitada pelos testes automatizados — não é uma meta em si, mas um indício de risco onde é baixa.</span></div>
+      <div class="term-card"><span class="term-name">Evidência de teste</span><span class="term-def">Registro (print, log de CI, vídeo) que comprova que um caso de teste foi de fato executado, e com que resultado.</span></div>
+      <div class="term-card"><span class="term-name">OWASP Top 10</span><span class="term-def">Lista de referência das dez vulnerabilidades mais comuns em aplicações web, mantida pela OWASP — base mínima de segurança a considerar.</span></div>
+      <div class="term-card"><span class="term-name">LGPD</span><span class="term-def">Lei Geral de Proteção de Dados (Lei 13.709/2018): regula como sistemas brasileiros devem coletar, armazenar e tratar dados pessoais.</span></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PAPÉIS
+       ============================================================ -->
+  <section class="block" id="papeis">
+    <div class="sec-head"><span class="sec-tag">§6</span><h2>Papéis na equipe</h2></div>
+    <p class="sec-intro">O Manual do Aluno já lista os quatro papéis (<a href="manual_do_aluno_lab_es.html#papeis">§5 do Manual</a>). Aqui vai o detalhe de responsabilidades de cada um — o que essa pessoa efetivamente faz durante a sprint.</p>
+
+    <div class="callout">
+      <span class="callout-label">Diferença em relação ao Scrum "de mercado"</span>
+      <p>No Scrum tradicional, Product Owner e Scrum Master costumam ser pessoas fixas ao longo de todo o projeto. No Laboratório, os quatro papéis <strong>rotacionam a cada sprint</strong> — exceto o de Product Owner na Trilha A1, que fica fixo com o aluno do TCC. O objetivo é didático: ninguém termina o semestre sabendo fazer só uma coisa.</p>
+    </div>
+
+    <div class="role-grid">
+      <div class="role-card">
+        <span class="r-title">Facilitador / Scrum Master</span>
+        <span class="r-desc">Conduz os rituais (weekly, review, retrospectiva), mantém o board atualizado e registra impedimentos da equipe.</span>
+        <ul class="r-do">
+          <li>Garante que a weekly dure os 10 minutos combinados, não mais</li>
+          <li>Atualiza o board antes de cada aula — não deixa cartão "esquecido"</li>
+          <li>Escreve a ata de retrospectiva com a equipe</li>
+        </ul>
+      </div>
+      <div class="role-card">
+        <span class="r-title">Product Owner</span>
+        <span class="r-desc">Dono do backlog e do contato com o cliente — decide o que entra e em que ordem.</span>
+        <span class="r-flag">Trilha A1: papel fixo, é o aluno do TCC</span>
+        <ul class="r-do">
+          <li>Prioriza o backlog em MoSCoW antes de cada sprint</li>
+          <li>Valida os critérios de aceite das histórias entregues</li>
+          <li>Fala com o cliente/professor quando o escopo precisa de decisão</li>
+        </ul>
+      </div>
+      <div class="role-card">
+        <span class="r-title">Responsável por dados</span>
+        <span class="r-desc">Cuida do modelo de dados, das migrations, da integridade referencial e do desempenho de consultas.</span>
+        <ul class="r-do">
+          <li>Mantém o DER e o dicionário de dados sincronizados com o DDL real</li>
+          <li>Revisa se novas migrations não quebram dados existentes</li>
+          <li>Investiga consultas lentas antes que virem problema em produção</li>
+        </ul>
+      </div>
+      <div class="role-card">
+        <span class="r-title">Responsável por qualidade</span>
+        <span class="r-desc">Mantém o plano de testes vivo, revisa PRs com foco em risco e cuida da integração contínua.</span>
+        <ul class="r-do">
+          <li>Atualiza as evidências de teste a cada sprint</li>
+          <li>É a segunda pessoa a revisar PRs de maior risco (regra de negócio, autenticação)</li>
+          <li>Mantém o pipeline de CI passando — PR quebrado não deveria chegar a revisão</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout callout--warn">
+      <p>Independente do papel do momento: <strong>todos programam, todos abrem PRs</strong>, e nenhum PR entra na branch principal sem revisão de outro integrante. O papel define uma responsabilidade extra de coordenação — não isenta ninguém de codar.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ARTEFATOS
+       ============================================================ -->
+  <section class="block" id="artefatos">
+    <div class="sec-head"><span class="sec-tag">§7</span><h2>Os 19 artefatos (E1–E10)</h2></div>
+    <p class="sec-intro">Cada linha abaixo é um documento com modelo pronto e exemplo preenchido em <a href="modelos_de_entregas_lab_es.html">Modelos de Entrega</a> — clique no nome para abrir o cartão correspondente.</p>
+
+    <h3>Fase 1–2 — Concepção e modelagem</h3>
+    <div class="tablewrap">
+      <table class="spec">
+        <thead><tr><th style="width:9%">Cód.</th><th>Artefato</th><th style="width:10%">Trilha</th><th style="width:14%">Quando</th><th>O que é</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge">E1</span></td><td><a class="rowlink" href="modelos_de_entregas_lab_es.html#e1a_documento_de_visao">Documento de Visão</a></td><td><span class="pill-track">A e B</span></td><td class="mono">Sem.1 · 21/08</td><td>Por que o projeto existe e para quem — não é o backlog.</td></tr>
+          <tr><td><span class="badge">E1</span></td><td><a class="rowlink" href="modelos_de_entregas_lab_es.html#e1b_declaracao_escopo_compartilhado">Declaração de Escopo Compartilhado</a></td><td><span class="pill-track">só A</span></td><td class="mono">Sem.1 · 21/08</td><td>Separa formalmente o que é entrega do TCC e o que é entrega do Laboratório.</td></tr>
+          <tr><td><span class="badge">E2</span></td><td><a class="rowlink" href="modelos_de_entregas_lab_es.html#e2a_backlog_priorizado">Backlog Priorizado</a></td><td><span class="pill-track">A e B</span></td><td class="mono">Sem.2 · 28/08</td><td>Histórias de usuário em INVEST, priorizadas em MoSCoW.</td></tr>
+          <tr><td><span class="badge">E2</span></td><td><a class="rowlink" href="modelos_de_entregas_lab_es.html#e2b_termo_de_aceite_projeto">Termo de Aceite do Projeto</a></td><td><span class="pill-track">A e B</span></td><td class="mono">Sem.2 · 28/08</td><td>Trava formalmente o escopo do MVP; precisa da assinatura do professor.</td></tr>
+          <tr><td><span class="badge">E3</span></td><td><a class="rowlink" href="modelos_de_entregas_lab_es.html#e3a_diagramas_uml">Diagramas UML</a></td><td><span class="pill-track">A e B</span></td><td class="mono">Sem.3 · 04/09</td><td>Casos de uso + diagrama de classes, rastreados até o backlog.</td></tr>
+          <tr><td><span class="badge">E3</span></td><td><a class="rowlink" href="modelos_de_entregas_lab_es.html#e3b_der">DER</a></td><td><span class="pill-track">A e B</span></td><td class="mono">Sem.3 · 04/09</td><td>Modelo de dados normalizado (3FN) com dicionário de dados.</td></tr>
+          <tr><td><span class="badge">E3</span></td><td><a class="rowlink" href="modelos_de_entregas_lab_es.html#e3c_script_ddl">Script DDL</a></td><td><span class="pill-track">A e B</span></td><td class="mono">Sem.3 · 04/09</td><td>SQL que cria o banco do zero — precisa rodar sem erro.</td></tr>
+          <tr><td><span class="badge">E4</span></td><td><a class="rowlink" href="modelos_de_entregas_lab_es.html#e4a_readme_repositorio">README do Repositório</a></td><td><span class="pill-track">A e B</span></td><td class="mono">Sem.4 · 11/09</td><td>Um terceiro precisa subir o projeto do zero só lendo este arquivo.</td></tr>
+          <tr><td><span class="badge">E4</span></td><td><a class="rowlink" href="modelos_de_entregas_lab_es.html#e4b_plano_de_testes">Plano de Testes</a></td><td><span class="pill-track">A e B</span></td><td class="mono">Sem.4 · 11/09</td><td>Estratégia de testes — o que, como e com que critério de aceite.</td></tr>
+          <tr><td><span class="badge">E4</span></td><td><a class="rowlink" href="modelos_de_entregas_lab_es.html#e4c_roteiro_prototipo_navegavel">Roteiro do Protótipo Navegável</a></td><td><span class="pill-track">A e B</span></td><td class="mono">Sem.4 · 11/09</td><td>Índice das telas do protótipo, ligado às histórias do backlog.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Fase 3 — Sprints de desenvolvimento</h3>
+    <div class="tablewrap">
+      <table class="spec">
+        <thead><tr><th style="width:9%">Cód.</th><th>Artefato</th><th style="width:10%">Trilha</th><th style="width:14%">Quando</th><th>O que é</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge">E5–E8</span></td><td><a class="rowlink" href="modelos_de_entregas_lab_es.html#e5-e8_relatorio_de_entrega_de_sprint">Relatório de Entrega de Sprint</a></td><td><span class="pill-track">A e B</span></td><td class="mono">Sem.5,8,10,12</td><td>Documento-capa: reúne incremento, backlog atualizado e evidências.</td></tr>
+          <tr><td><span class="badge">E5–E8</span></td><td><a class="rowlink" href="modelos_de_entregas_lab_es.html#e5-e8_ata_retrospectiva">Ata de Retrospectiva</a></td><td><span class="pill-track">A e B</span></td><td class="mono">Sem.5,8,10,12</td><td>Reflexão da equipe após a Review, com ações de melhoria efetivamente aplicadas.</td></tr>
+          <tr><td><span class="badge">E5–E8</span></td><td><a class="rowlink" href="modelos_de_entregas_lab_es.html#e5-e8_relatorio_individual_contribuicao">Relatório Individual de Contribuição</a></td><td><span class="pill-track">A e B</span></td><td class="mono">Sem.5,8,10,12</td><td>Alimenta o fator de contribuição individual (0,5–1,2) da nota final.</td></tr>
+          <tr><td><span class="badge">E5–E8</span></td><td><a class="rowlink" href="modelos_de_entregas_lab_es.html#e5-e8_evidencias_de_teste">Evidências de Teste</a></td><td><span class="pill-track">A e B</span></td><td class="mono">Sem.5,8,10,12</td><td>Execução real dos casos previstos no Plano de Testes (E4b).</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Fase 4 — Fechamento</h3>
+    <div class="tablewrap">
+      <table class="spec">
+        <thead><tr><th style="width:9%">Cód.</th><th>Artefato</th><th style="width:10%">Trilha</th><th style="width:14%">Quando</th><th>O que é</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge">E9</span></td><td><a class="rowlink" href="modelos_de_entregas_lab_es.html#e9a_relatorio_de_testes_executados">Relatório de Testes Executados</a></td><td><span class="pill-track">A e B</span></td><td class="mono">Sem.13 · 06/11</td><td>Bateria de testes consolidada da Fase 4, cobrindo o sistema como um todo.</td></tr>
+          <tr><td><span class="badge">E9</span></td><td><a class="rowlink" href="modelos_de_entregas_lab_es.html#e9b_termo_de_aceite_do_cliente">Termo de Aceite do Cliente</a></td><td><span class="pill-track">A e B</span></td><td class="mono">Sem.13 · 06/11</td><td>Confirma que o combinado no início foi de fato entregue e aceito.</td></tr>
+          <tr><td><span class="badge">E10</span></td><td><a class="rowlink" href="modelos_de_entregas_lab_es.html#e10a_documentacao_final">Documentação Final Consolidada</a></td><td><span class="pill-track">A e B</span></td><td class="mono">Sem.14 · 13/11</td><td>Índice navegável de tudo (E1–E9): a rastreabilidade completa, exposta.</td></tr>
+          <tr><td><span class="badge">E10</span></td><td><a class="rowlink" href="modelos_de_entregas_lab_es.html#e10b_manual_do_usuario">Manual do Usuário</a></td><td><span class="pill-track">A e B</span></td><td class="mono">Sem.14 · 13/11</td><td>Escrito para o usuário final — sem jargão técnico.</td></tr>
+          <tr><td><span class="badge">E10</span></td><td><a class="rowlink" href="modelos_de_entregas_lab_es.html#e10c_roteiro_apresentacao_e_video">Roteiro de Apresentação e Vídeo</a></td><td><span class="pill-track">A e B</span></td><td class="mono">Sem.14 · 13/11</td><td>Base do vídeo de demonstração e do pitch ao vivo na Feira de Projetos.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       REFERÊNCIAS
+       ============================================================ -->
+  <section class="block" id="referencias">
+    <div class="sec-head"><span class="sec-tag">§8</span><h2>Referências para estudar</h2></div>
+    <p class="sec-intro">Fontes primárias e materiais de referência amplamente usados no mercado — não são leitura obrigatória, mas são onde ir quando um termo do glossário não for suficiente.</p>
+
+    <div class="ref-group">
+      <h3>Scrum e metodologia ágil</h3>
+      <div class="ref-list">
+        <div class="ref-item">
+          <a class="ref-title" href="https://scrumguides.org/scrum-guide.html" target="_blank" rel="noopener">The Scrum Guide (oficial)</a>
+          <span class="ref-desc">O documento original que define papéis, eventos e artefatos do Scrum — 15 páginas, leitura de referência.</span>
+          <span class="ref-url">scrumguides.org/scrum-guide.html</span>
+        </div>
+        <div class="ref-item">
+          <a class="ref-title" href="https://www.mountaingoatsoftware.com/agile/user-stories" target="_blank" rel="noopener">User Stories — Mountain Goat Software (Mike Cohn)</a>
+          <span class="ref-desc">Referência clássica sobre como escrever boas histórias de usuário, por quem popularizou o formato.</span>
+          <span class="ref-url">mountaingoatsoftware.com/agile/user-stories</span>
+        </div>
+        <div class="ref-item">
+          <a class="ref-title" href="https://www.atlassian.com/agile/project-management/user-story-criteria-invest" target="_blank" rel="noopener">Critério INVEST — Atlassian Agile Coach</a>
+          <span class="ref-desc">Explicação prática de cada letra do INVEST, com exemplos de histórias boas e ruins.</span>
+          <span class="ref-url">atlassian.com/agile/project-management/user-story-criteria-invest</span>
+        </div>
+        <div class="ref-item">
+          <a class="ref-title" href="https://www.agilebusiness.org/dsdm-project-framework/moscow-prioritisation.html" target="_blank" rel="noopener">MoSCoW Prioritisation — Agile Business Consortium</a>
+          <span class="ref-desc">Origem formal da técnica MoSCoW (do framework DSDM), com critérios de quando usar cada categoria.</span>
+          <span class="ref-url">agilebusiness.org/dsdm-project-framework/moscow-prioritisation.html</span>
+        </div>
+        <div class="ref-item">
+          <a class="ref-title" href="https://www.atlassian.com/agile/kanban" target="_blank" rel="noopener">Kanban Guide — Atlassian Agile Coach</a>
+          <span class="ref-desc">Introdução ao board Kanban: colunas, limite de trabalho em progresso, fluxo.</span>
+          <span class="ref-url">atlassian.com/agile/kanban</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ref-group">
+      <h3>Modelagem UML e banco de dados</h3>
+      <div class="ref-list">
+        <div class="ref-item">
+          <a class="ref-title" href="https://martinfowler.com/bliki/UmlAsSketch.html" target="_blank" rel="noopener">UML as Sketch — Martin Fowler</a>
+          <span class="ref-desc">Como usar UML de forma pragmática (esboço de comunicação), sem tentar modelar cada detalhe do sistema.</span>
+          <span class="ref-url">martinfowler.com/bliki/UmlAsSketch.html</span>
+        </div>
+        <div class="ref-item">
+          <a class="ref-title" href="https://mermaid.js.org/" target="_blank" rel="noopener">Documentação do Mermaid</a>
+          <span class="ref-desc">Sintaxe para gerar diagramas de classes, ER e fluxo a partir de texto — o que o GitHub renderiza nativamente nos <code>.md</code> deste curso.</span>
+          <span class="ref-url">mermaid.js.org</span>
+        </div>
+        <div class="ref-item">
+          <a class="ref-title" href="https://www.geeksforgeeks.org/normal-forms-in-dbms/" target="_blank" rel="noopener">Normal Forms in DBMS (1FN, 2FN, 3FN)</a>
+          <span class="ref-desc">Explicação passo a passo de normalização com exemplos — útil para revisar antes de entregar o DER (E3b).</span>
+          <span class="ref-url">geeksforgeeks.org/normal-forms-in-dbms</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ref-group">
+      <h3>Git, code review e versionamento</h3>
+      <div class="ref-list">
+        <div class="ref-item">
+          <a class="ref-title" href="https://git-scm.com/doc" target="_blank" rel="noopener">Documentação oficial do Git</a>
+          <span class="ref-desc">Referência completa de comandos — inclui o Pro Git Book gratuito, em português.</span>
+          <span class="ref-url">git-scm.com/doc</span>
+        </div>
+        <div class="ref-item">
+          <a class="ref-title" href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests" target="_blank" rel="noopener">About Pull Requests — GitHub Docs</a>
+          <span class="ref-desc">Como funciona um PR na prática, do ponto de vista de quem abre e de quem revisa.</span>
+          <span class="ref-url">docs.github.com — about pull requests</span>
+        </div>
+        <div class="ref-item">
+          <a class="ref-title" href="https://www.conventionalcommits.org/en/v1.0.0/" target="_blank" rel="noopener">Conventional Commits</a>
+          <span class="ref-desc">Convenção de mensagens de commit (<code>feat:</code>, <code>fix:</code>, <code>docs:</code>) citada na oficina de "convenções de commit" da Fase 2.</span>
+          <span class="ref-url">conventionalcommits.org</span>
+        </div>
+        <div class="ref-item">
+          <a class="ref-title" href="https://12factor.net/config" target="_blank" rel="noopener">The Twelve-Factor App — Config</a>
+          <span class="ref-desc">Por que configuração e segredos ficam fora do código-fonte, em variáveis de ambiente.</span>
+          <span class="ref-url">12factor.net/config</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ref-group">
+      <h3>Testes e segurança</h3>
+      <div class="ref-list">
+        <div class="ref-item">
+          <a class="ref-title" href="https://martinfowler.com/articles/practical-test-pyramid.html" target="_blank" rel="noopener">The Practical Test Pyramid — Martin Fowler</a>
+          <span class="ref-desc">Como equilibrar testes unitários, de integração e de ponta a ponta — referência para montar o Plano de Testes (E4b).</span>
+          <span class="ref-url">martinfowler.com/articles/practical-test-pyramid.html</span>
+        </div>
+        <div class="ref-item">
+          <a class="ref-title" href="https://owasp.org/www-project-top-ten/" target="_blank" rel="noopener">OWASP Top 10</a>
+          <span class="ref-desc">As dez vulnerabilidades mais críticas em aplicações web — base da oficina de "OWASP básico" na Sprint 4.</span>
+          <span class="ref-url">owasp.org/www-project-top-ten</span>
+        </div>
+        <div class="ref-item">
+          <a class="ref-title" href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm" target="_blank" rel="noopener">Lei 13.709/2018 (LGPD) — texto oficial</a>
+          <span class="ref-desc">Texto integral da Lei Geral de Proteção de Dados, citada nos requisitos não funcionais da Sprint 4.</span>
+          <span class="ref-url">planalto.gov.br — Lei 13.709/2018</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Glossário, Papéis e Artefatos · Laboratório de Engenharia de Software · ADS · Fatec Ribeirão Preto · Complementa o Manual do Aluno e os Modelos de Entrega.</p>
+  </footer>
+
+</main>
+
+</body>
+</html>
